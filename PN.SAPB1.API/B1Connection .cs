@@ -5,22 +5,31 @@ using System.Net;
 
 namespace PN.SAPB1.API
 {
-    public class Connection
+    public class B1Connection
     {
-        public static string url = " https://LENOVOS145:50000/b1s/v1";
+        public static string Url;
 
-        public static string UserName = "manager";
+        public static string UserName;
+     
+        public static string Password;
 
-        public static string Password = "update";
+        public static string CompanyDB;
 
-        public static string CompanyDB = "SBO_Demo_BR";
+        public static string Server;
 
-        public static string Server = "LENOVOS145";
+        public static string SLSession;
 
 
-        public static string SLSession { get; private set; } = "";
+        public B1Connection(string url, string userName, string password, string companyDB, string server)
+        {
+            Url = url;
+            UserName = userName;
+            Password = password;
+            CompanyDB = companyDB;
+            Server = server;
+        }
 
-        public static async Task<bool> Login()
+        public async Task<bool> Login()
         {
             try
             {
@@ -34,7 +43,7 @@ namespace PN.SAPB1.API
 
                 ServicePointManager.ServerCertificateValidationCallback += delegate { return true; };
 
-                var client = new RestClient(url);
+                var client = new RestClient(Url);
                 var request = new RestRequest("/Login", Method.POST);
 
                 var body = JsonConvert.SerializeObject(login);

@@ -8,7 +8,7 @@ namespace PN.SAPB1.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +26,16 @@ namespace PN.SAPB1.API
             builder.Services.AddDbContext<AppDbContext>(options =>
                             options.UseSqlServer(sqlConnection));
 
+            // Realiza conexão na service Layer do SAP B1
+
+            B1Connection b1 = new B1Connection(
+                                 builder.Configuration["SapB1:ServiceLayerUrl"],
+                                 builder.Configuration["SapB1:Username"],
+                                 builder.Configuration["SapB1:Password"],
+                                 builder.Configuration["SapB1:CompanyDB"],
+                                 builder.Configuration["SapB1:Server"]);
+
+            await b1.Login();
 
             // Informações da API Swagger
             builder.Services.AddSwaggerGen(c =>
@@ -62,5 +72,7 @@ namespace PN.SAPB1.API
 
             app.Run();
         }
+
+      
     }
 }

@@ -72,7 +72,11 @@ namespace PN.SAPB1.API.Controllers
             if (tipo.ToUpper() != "C" && tipo.ToUpper() != "F")
                 return BadRequest("Tipo incorreto, informe C para cliente ou F para fornecedor!");
 
-            var client = new RestClient($"https://receitaws.com.br/v1/cnpj/{cnpj.Replace(".", "").Replace("/", "").Replace("-", "")}");
+            cnpj = Uri.UnescapeDataString(cnpj);
+
+            cnpj = cnpj.Replace(".", "").Replace("/", "").Replace("-", "");
+
+            var client = new RestClient($"https://receitaws.com.br/v1/cnpj/{cnpj}");
             var request = new RestRequest(Method.GET);
             request.AddHeader("Accept", "application/json");
             IRestResponse response = client.Execute(request);
@@ -84,9 +88,16 @@ namespace PN.SAPB1.API.Controllers
 
                 try
                 {
+
+
                     RetornoCnpj emp = new();
 
                     emp = JsonConvert.DeserializeObject<RetornoCnpj>(response.Content);
+
+                    if (emp == null || emp.cnpj == null)
+                    {
+                        throw new Exception();
+                    }
 
                     bp.CardCode = tipo + emp.cnpj.Replace(".", "").Replace("/", "").Replace("-", "");
                     bp.CardName = emp.nome;
@@ -160,10 +171,9 @@ namespace PN.SAPB1.API.Controllers
                     {
                         try
                         {
-                            await Connection.Login();
 
-                            string server = Connection.Server;
-                            string url = Connection.url;
+                            string server = B1Connection.Server;
+                            string url = B1Connection.Url;
 
                             var client2 = new RestClient(url);
                             var request2 = new RestRequest($"/BusinessPartners", Method.POST);
@@ -179,7 +189,7 @@ namespace PN.SAPB1.API.Controllers
                             request2.AddParameter("application/json", body, ParameterType.RequestBody);
 
                             CookieContainer cookiecon = new CookieContainer();
-                            cookiecon.Add(new Cookie("B1SESSION", Connection.SLSession, "/b1s/v1", server));
+                            cookiecon.Add(new Cookie("B1SESSION", B1Connection.SLSession, "/b1s/v1", server));
 
                             client2.CookieContainer = cookiecon;
 
@@ -247,10 +257,9 @@ namespace PN.SAPB1.API.Controllers
             {
                 try
                 {
-                    await Connection.Login();
 
-                    string server = Connection.Server;
-                    string url = Connection.url;
+                    string server = B1Connection.Server;
+                    string url = B1Connection.Url;
 
                     var client = new RestClient(url);
                     var request = new RestRequest($"/BusinessPartners", Method.POST);
@@ -266,7 +275,7 @@ namespace PN.SAPB1.API.Controllers
                     request.AddParameter("application/json", body, ParameterType.RequestBody);
 
                     CookieContainer cookiecon = new CookieContainer();
-                    cookiecon.Add(new Cookie("B1SESSION", Connection.SLSession, "/b1s/v1", server));
+                    cookiecon.Add(new Cookie("B1SESSION", B1Connection.SLSession, "/b1s/v1", server));
 
                     client.CookieContainer = cookiecon;
 
