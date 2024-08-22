@@ -17,8 +17,8 @@ Este projeto é uma Web API RestFul que realiza operações de consulta e cadast
 
 🛠️ **Tecnologias Utilizadas**
 
-**Linguagem:** C#
-**Framework:** ASP.NET Core 8
-**Banco de Dados:** Microsoft SQL Server
-**ERP:** SAP Business One
-**Ferramentas:** Entity Framework Core, Swagger, RestSharp, Newtonsoft.Json, SAP B1 Service Layer
+- **Linguagem:** C#
+- **Framework:** ASP.NET Core 8
+- **Banco de Dados:** Microsoft SQL Server
+- **ERP:** SAP Business One
+- **Ferramentas:** Entity Framework Core, Swagger, RestSharp, Newtonsoft.Json, SAP B1 Service Layer
